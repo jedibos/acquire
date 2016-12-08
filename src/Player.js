@@ -11,15 +11,24 @@ export default class Player {
         this.stocks = {};
     }
 
-    addStock(companyName, numberOfStocks) {
-        let existingStocks = this.getNumberOfStocks(companyName); 
-        this.stocks[companyName] = (existingStocks | 0) + numberOfStocks;
+    purchaseStock(companyName, numberOfStocks, valuePerStock) {
+        this.addStock(companyName, numberOfStocks);
+        this.cash -= (numberOfStocks * valuePerStock);
     }
 
     sellStock(companyName, numberOfStocks, valuePerStock) {
         let existingStocks = this.getNumberOfStocks(companyName);
         this.stocks[companyName] = existingStocks - numberOfStocks;
         this.cash += (numberOfStocks * valuePerStock);
+    }
+
+    /**
+     * Adds stock to a player, does not affect money. Used internally alongside the money
+     * transactions, when opening a company, and when trading stocks.
+     */
+    addStock(companyName, numberOfStocks) {
+        let existingStocks = this.getNumberOfStocks(companyName); 
+        this.stocks[companyName] = (existingStocks | 0) + numberOfStocks;
     }
 
     getAllStocks() {

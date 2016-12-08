@@ -28,15 +28,18 @@ let board = new GameBoard();
 // console.log(board.isChipDead('12I'));
 
 
+/**
+ * Test case to show purchasing and selling stocks.
+ */
 let brian = new Player(1, 'Brian');
 console.log("--------Initialize");
 console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
 console.log('Cash:' + brian.cash)
 
 brian.addStock(COMPANY_NAMES.Towers, 1);
-brian.addStock(COMPANY_NAMES.Towers, 3);
-brian.addStock(COMPANY_NAMES.Luxor, 3);
-brian.addStock(COMPANY_NAMES.Towers, 3);
+brian.purchaseStock(COMPANY_NAMES.Towers, 3, 200);
+brian.purchaseStock(COMPANY_NAMES.Luxor, 3, 400);
+brian.purchaseStock(COMPANY_NAMES.Towers, 3, 400);
 
 console.log("--------Before transaction");
 console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
