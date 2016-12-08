@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import GameBoard from './src/GameBoard';
-import { companyNames } from './src/GameBoard'; 
+import { COMPANY_NAMES } from './src/GameBoard'; 
 import Player from './src/Player';
 import init from './src/Initialize';
 
@@ -33,16 +33,16 @@ console.log("--------Initialize");
 console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
 console.log('Cash:' + brian.cash)
 
-brian.addStock(companyNames.Towers, 1);
-brian.addStock(companyNames.Towers, 3);
-brian.addStock(companyNames.Luxor, 3);
-brian.addStock(companyNames.Towers, 3);
+brian.addStock(COMPANY_NAMES.Towers, 1);
+brian.addStock(COMPANY_NAMES.Towers, 3);
+brian.addStock(COMPANY_NAMES.Luxor, 3);
+brian.addStock(COMPANY_NAMES.Towers, 3);
 
 console.log("--------Before transaction");
 console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
 console.log('Cash:' + brian.cash)
 
-brian.sellStock(companyNames.Towers, 4, 200);
+brian.sellStock(COMPANY_NAMES.Towers, 4, 200);
 
 console.log("--------After transaction");
 console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));

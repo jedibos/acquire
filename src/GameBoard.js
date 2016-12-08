@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import Company from './Company';
 
-export const companyNames = {
+export const COMPANY_NAMES = {
     Luxor: 'Luxor',
     Towers: 'Towers',
     American: 'American',
@@ -18,13 +18,13 @@ export default class GameBoard {
         this.chips = _.combine(rows, columns).map(val => { return val[0] + val[1] });
 
         this.companies = [
-            new Company('Luxor'), 
-            new Company('Towers'),
-            new Company('American'),  
-            new Company('Worldwide'),  
-            new Company('Festival'),  
-            new Company('Imperial'),  
-            new Company('Contential')]; 
+            new Company(COMPANY_NAMES.Luxor), 
+            new Company(COMPANY_NAMES.Towers),
+            new Company(COMPANY_NAMES.American),  
+            new Company(COMPANY_NAMES.Worldwide),  
+            new Company(COMPANY_NAMES.Festival),  
+            new Company(COMPANY_NAMES.Imperial),  
+            new Company(COMPANY_NAMES.Contential)]; 
     }
 
     /**

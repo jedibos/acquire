@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import { companyNames } from './GameBoard';
 
 export default class Player {
     constructor(pId, pName) {
