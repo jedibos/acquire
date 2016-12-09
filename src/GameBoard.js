@@ -1,44 +1,74 @@
 import _ from 'underscore';
-import Company from './Company';
-
-export const COMPANY_NAMES = {
-    Luxor: 'Luxor',
-    Towers: 'Towers',
-    American: 'American',
-    Worldwide: 'Worldwide',
-    Festival: 'Festival',
-    Imperial: 'Imperial',
-    Contential: 'Contential'
-}
-export const rows = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
-export const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+import PlacementEffect from './PlacementEffect';
+import {rows, columns} from './Grid.js';
 
 export default class GameBoard {
-    constructor() {
-        this.chips = _.combine(rows, columns).map(val => { return val[0] + val[1] });
-
-        this.companies = [
-            new Company(COMPANY_NAMES.Luxor), 
-            new Company(COMPANY_NAMES.Towers),
-            new Company(COMPANY_NAMES.American),  
-            new Company(COMPANY_NAMES.Worldwide),  
-            new Company(COMPANY_NAMES.Festival),  
-            new Company(COMPANY_NAMES.Imperial),  
-            new Company(COMPANY_NAMES.Contential)]; 
+    constructor(pCompanyManager) {
+        this.allChips = _.combine(rows, columns).map(val => { return val[0] + val[1] });
+        this.chipPile = this.allChips.slice();
+        this.chipsOnTheBoard = [];
+        this.companyManager = pCompanyManager;
     }
 
     /**
-     * Retrieves the company associated with a particular chip.
+     * Determines the type of effect that placement of tile will have on the game board.
      */
-    getCompanyByChipId(chipId) {
-        return _.find(this.companies, company => { return company.containsChip(chipId) });
+    determineChipPlacementEffect(chipId) {
+        let neighbors = this.getNeighborIds(chipId);
+        let neighborCompanies = this.getNeighborCompanies(chipId, neighbors);
+
+        switch (true) {
+            case (neighbors.size == 0):
+                return PlacementEffect.NO_AFFECT;
+            case (neighborCompanies.size == 1):
+                return PlacementEffect.GROW_COMPANY;
+            case (neighbors.size > 0 && neighborCompanies.size == 0):
+                return PlacementEffect.CREATE_COMPANY;
+            default:
+                return PlacementEffect.MERGE
+        }
     }
 
     /**
-     * Retrieves the company by name.
+     * Place a chip on the board, the assumption is made that no companies will
+     * be formed or merged. If either of those effects need to take place, then
+     * the other placeChip* methods should be invoked.
      */
-    getCompanyByName(name) {
-        return _.find(this.companies, company => { return company.name == name });
+    placeChip(chipId) {
+        //if the chip causes a company to grow, then find the copmany and add to it
+        let neighborCompanies = this.getNeighborCompanies(chipId);
+        if (neighborCompanies.length == 1) {
+            neighborCompanies[0].addChip(chipId);
+        }
+        this.chipsOnTheBoard.push(chipId);
+    }
+
+    placeChipAndStartCompany(player, chipId, newCompanyName) {
+        //determine which chips will be part of the new company
+        let includedChips = [chipId];
+
+        //TODO - need to call the this.getAllConnectedChipsOnBoard method
+
+        let company = this.companyManager.getCompanyByName(newCompanyName);
+        company.openCompany(player, includedChips);
+        this.chipsOnTheBoard.push(chipId);
+    }
+
+    /**
+     * 
+     */
+    placeChipAndMergeCompanies(player, chipId) {
+        let neighborCompanies = this.getNeighborCompanies(chipId);
+        _.each(neighborCompanies, company => { company.status = CompanyStatus.MERGING });
+        this.chipsOnTheBoard.push(chipId);
+    }
+
+    /**
+     * Determines if the chip is present on the board, this is for chips that are not
+     * part of a company.
+     */
+    isChipOnBoard(chipId) {
+        return _.contains(this.chipsOnTheBoard, chipId);
     }
 
     /**
@@ -48,7 +78,7 @@ export default class GameBoard {
     isChipDead(chipId) {
         //get all the companies next to this chip
         let companies = _.compact(
-            this.getNeighbors(chipId).map(neighbor => { return this.getCompanyByChipId(neighbor) })
+            this.getNeighborIds(chipId).map(neighbor => { return this.getCompanyByChipId(neighbor) })
         );
 
         //remove duplicates (uniq) and filter only permanent companies
@@ -59,13 +89,64 @@ export default class GameBoard {
     }
 
     /**
-     * Find all the chips adjacent to a particular chip. The chips on the sides and corners may not have all
-     * four, so compact removes those null values. 
+     * Chips that are either in a player's hand or in the chip pile.
      */
-    getNeighbors(chipId) {
+    getAllChipsNotOnTheBoard() {
+        return _.difference(this.allChips, this.chipsOnTheBoard);
+    }
+
+    /**
+     * Scans all the unplaced chips.
+     */
+    doAnyOpenersRemains() {
+        _.filter(this.chipPile, chip => {
+            return this.determineChipPlacementEffect() == PlacementEffect.CREATE_COMPANY
+        }); 
+    }
+
+    /**
+     * Find all the chips adjacent to a particular chip.
+     */
+    getNeighborIds(chipId) {
         return _.compact([
             this.getRightNeighborId(chipId),  this.getLeftNeighborId(chipId),
             this.getBottomNeighborId(chipId), this.getTopNeighborId(chipId)]);
+    }
+
+    /**
+     * Placement of a chip can cause adjacent chips, and potentially the chips adjacent to
+     * those chips since at the start of the game can have chips next to each other that are
+     * not part of a company).
+     */
+    getAllConnectedChipsOnBoard(chipId, previouslyChecked) {
+        previouslyChecked = previouslyChecked || [];
+        let neighbors = this.getNeighborChipsOnTheBoard(chipId);
+
+        let needToCheck = _.difference(neighbors, previouslyChecked);
+        previouslyChecked = _.union(previouslyFound, neighbors);
+
+        _.each(needToCheck, check => {
+            neighbors = _.union(neighbors, getAllConnectedChipsOnBoard(neighbors, previouslyChecked))
+        })
+
+        return neighbors;
+    }
+
+    /**
+     * Find all chips on the board, aka previously placed, adjacent to the chip id.
+     */
+    getNeighborChipsOnTheBoard(chipId) {
+        return _.filter(this.getNeighborIds(chipId), neighborId => { this.isChipOnBoard(neighborId) });
+    }
+
+    /**
+     * Finds the companies that are next to a chip.
+     */
+    getNeighborCompanies(chipId, neighborChipIds) {
+        neighborChipIds = neighborChipIds || this.getNeighborIds(chipId);
+        return _.compact(
+            neighborChipIds.map(neighbor => { return this.companyManager.getCompanyByChipId(neighbor) })
+        );
     }
 
     /**

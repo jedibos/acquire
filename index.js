@@ -1,11 +1,13 @@
 import _ from 'underscore';
 import GameBoard from './src/GameBoard';
-import { COMPANY_NAMES } from './src/GameBoard'; 
+import CompanyNames from './src/CompanyNames';
+import CompanyManager from './src/CompanyManager'; 
 import Player from './src/Player';
 import init from './src/Initialize';
 
 init();
-let board = new GameBoard();
+let companyManager = new CompanyManager();
+let board = new GameBoard(companyManager);
 
 /**
  * Test for all neighbors.
@@ -31,22 +33,31 @@ let board = new GameBoard();
 /**
  * Test case to show purchasing and selling stocks.
  */
-let brian = new Player(1, 'Brian');
-console.log("--------Initialize");
-console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
-console.log('Cash:' + brian.cash)
+// let brian = new Player(1, 'Brian');
+// console.log("--------Initialize");
+// console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
+// console.log('Cash:' + brian.cash)
 
-brian.addStock(COMPANY_NAMES.Towers, 1);
-brian.purchaseStock(COMPANY_NAMES.Towers, 3, 200);
-brian.purchaseStock(COMPANY_NAMES.Luxor, 3, 400);
-brian.purchaseStock(COMPANY_NAMES.Towers, 3, 400);
+// brian.addStock(CompanyNames.Towers, 1);
+// brian.purchaseStock(CompanyNames.Towers, 3, 200);
+// brian.purchaseStock(CompanyNames.Luxor, 3, 400);
+// brian.purchaseStock(CompanyNames.Towers, 3, 400);
 
-console.log("--------Before transaction");
-console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
-console.log('Cash:' + brian.cash)
+// console.log("--------Before transaction");
+// console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
+// console.log('Cash:' + brian.cash)
 
-brian.sellStock(COMPANY_NAMES.Towers, 4, 200);
+// brian.sellStock(CompanyNames.Towers, 4, 200);
 
-console.log("--------After transaction");
-console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
-console.log('Cash:' + brian.cash);
+// console.log("--------After transaction");
+// console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
+// console.log('Cash:' + brian.cash);
+
+
+/**
+ * Test case to verify that the find connected works properly.
+ */
+_.each(['2A', '2B', '2C'], chipId => { board.placeChip(chipId )} );
+board.placeChipAndStartCompany(new Player('Brian'), '2D', CompanyNames.Luxor);
+let luxor = companyManager.getCompanyByName(CompanyNames.Luxor);
+console.log(luxor.companyChips);
