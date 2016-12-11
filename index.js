@@ -1,9 +1,9 @@
 import _ from 'underscore';
-import GameBoard from './src/GameBoard';
-import CompanyNames from './src/CompanyNames';
-import CompanyManager from './src/CompanyManager'; 
-import Player from './src/Player';
-import init from './src/Initialize';
+import GameBoard from './src/client/game/GameBoard';
+import CompanyNames from './src/client/game/CompanyNames';
+import CompanyManager from './src/client/game/CompanyManager'; 
+import Player from './src/client/game/Player';
+import init from './src/client/game/Initialize';
 
 init();
 let companyManager = new CompanyManager();
