@@ -77,7 +77,7 @@ export default class GameBoard {
     isChipDead(chipId) {
         //get all the companies next to this chip
         let companies = _.compact(
-            this.getNeighborIds(chipId).map(neighbor => { return this.getCompanyByChipId(neighbor) })
+            this.getNeighborIds(chipId).map(neighbor => { return this.companyManager.getCompanyByChipId(neighbor) })
         );
 
         //remove duplicates (uniq) and filter only permanent companies

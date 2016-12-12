@@ -1,21 +1,22 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/client/pages/index.html');
-});
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
+        </div>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
 
-io.on('connection', function(socket){
-  socket.on('game1', function(msg){
-    if (msg.everyone) {
-      io.emit('game1', msg);
-    } else {
-      socket.broadcast.emit('game1', msg);
-    }
-  });
-});
-
-http.listen(3000, function(){
-  console.log('listening on *:3000');
-});
+          Yeah, let's say something else!
+        </p>
+      </div>
+    );
+  }
+}
+export default App;
