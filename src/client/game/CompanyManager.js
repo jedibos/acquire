@@ -5,13 +5,13 @@ import CompanyNames from './CompanyNames';
 export default class CompanyManager {
     constructor() {
         this.companies = [
-            new Company(CompanyNames.Luxor), 
-            new Company(CompanyNames.Towers),
-            new Company(CompanyNames.American),  
-            new Company(CompanyNames.Worldwide),  
-            new Company(CompanyNames.Festival),  
-            new Company(CompanyNames.Imperial),  
-            new Company(CompanyNames.Contential)]; 
+            new Company({name: CompanyNames.Luxor}), 
+            new Company({name: CompanyNames.Towers}),
+            new Company({name: CompanyNames.American}),  
+            new Company({name: CompanyNames.Worldwide}),  
+            new Company({name: CompanyNames.Festival}),  
+            new Company({name: CompanyNames.Imperial}),  
+            new Company({name: CompanyNames.Contential})]; 
     }
 
     /**

@@ -9,20 +9,23 @@ import CompanyStatus from './CompanyStatus';
  * are purchased or sold.
  */
 export default class Company {
-    constructor(pName, pColor, pLevel) {
-        this.name = pName;
-        this.color = pColor;
-        this.level = pLevel;
-        this.status = CompanyStatus.CLOSED;
+    /**
+     * Initializes a new company using state information.
+     */
+    constructor(pState) {
+        this.name = pState.name;
+        this.color = pState.color;
+        this.level = pState.level;
+        this.status = pState.status || CompanyStatus.CLOSED;
 
         //cost of the stock, initially based on the 
-        this.stockCost = 0;
+        this.stockCost = pState.stockCost || 0;
 
         //contains the ids of all chips that are part of this company
-        this.companyChips = [];
+        this.companyChips = pState.companyChips || [];
 
         //the number of stocks available for the company, initially 25
-        this.availableStocks = 25;
+        this.availableStocks = pState.availableStocks || 25;
     }
 
     /**

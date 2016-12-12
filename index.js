@@ -3,11 +3,9 @@ import GameBoard from './src/client/game/GameBoard';
 import CompanyNames from './src/client/game/CompanyNames';
 import CompanyManager from './src/client/game/CompanyManager'; 
 import Player from './src/client/game/Player';
-import init from './src/client/game/Initialize';
 
-init();
 let companyManager = new CompanyManager();
-let board = new GameBoard(companyManager);
+let board = new GameBoard({companyManager});
 
 /**
  * Test for all neighbors.
@@ -33,7 +31,7 @@ let board = new GameBoard(companyManager);
 /**
  * Test case to show purchasing and selling stocks.
  */
-// let brian = new Player(1, 'Brian');
+// let brian = new Player({id: 1, name: 'Brian'});
 // console.log("--------Initialize");
 // console.log("Stocks: "+ JSON.stringify(brian.getAllStocks()));
 // console.log('Cash:' + brian.cash)
@@ -58,6 +56,6 @@ let board = new GameBoard(companyManager);
  * Test case to verify that the find connected works properly.
  */
 _.each(['2A', '2B', '2C'], chipId => { board.placeChip(chipId )} );
-board.placeChipAndStartCompany(new Player('Brian'), '2D', CompanyNames.Luxor);
+board.placeChipAndStartCompany(new Player({id: 1, name:'Brian'}), '2D', CompanyNames.Luxor);
 let luxor = companyManager.getCompanyByName(CompanyNames.Luxor);
 console.log(luxor.companyChips);

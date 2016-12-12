@@ -1,14 +1,14 @@
 import _ from 'underscore';
 
 export default class Player {
-    constructor(pId, pName) {
-        this.id = pId;
-        this.name = pName;
+    constructor(pState) {
+        this.id = pState.id;
+        this.name = pState.name;
 
         //players start out with 4 1000s, 3 500s, and 5 100s
-        this.cash = 4000 + 1500 + 500;
+        this.cash = pState.cast || 4000 + 1500 + 500;
 
-        this.stocks = {};
+        this.stocks = pState.stocks || {};
     }
 
     purchaseStock(companyName, numberOfStocks, valuePerStock) {

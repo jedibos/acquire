@@ -1,13 +1,12 @@
 import _ from 'underscore';
 import PlacementEffect from './PlacementEffect';
-import {rows, columns} from './Grid.js';
+import {rows, columns, allChips} from './Grid.js';
 
 export default class GameBoard {
-    constructor(pCompanyManager) {
-        this.allChips = _.combine(rows, columns).map(val => { return val[0] + val[1] });
-        this.chipPile = this.allChips.slice();
-        this.chipsOnTheBoard = [];
-        this.companyManager = pCompanyManager;
+    constructor(pState) {
+        this.companyManager = pState.companyManager;
+        this.chipPile = pState.chipPile || allChips.slice();
+        this.chipsOnTheBoard = pState.chipsOnTheBoard || [];
     }
 
     /**
@@ -45,10 +44,10 @@ export default class GameBoard {
 
     placeChipAndStartCompany(player, chipId, newCompanyName) {
         //determine which chips will be part of the new company
-        let includedChips = [chipId];
+        let chipsIncludedInOpener = this.getAllConnectedChipsOnBoard(chipId);
+        let includedChips = _.union([chipId], chipsIncludedInOpener);
 
-        //TODO - need to call the this.getAllConnectedChipsOnBoard method
-
+        //create the company and add the chips to it
         let company = this.companyManager.getCompanyByName(newCompanyName);
         company.openCompany(player, includedChips);
         this.chipsOnTheBoard.push(chipId);
@@ -120,15 +119,14 @@ export default class GameBoard {
      */
     getAllConnectedChipsOnBoard(chipId, previouslyChecked) {
         previouslyChecked = previouslyChecked || [];
-        let neighbors = this.getNeighborChipsOnTheBoard(chipId);
 
+        let neighbors = this.getNeighborChipsOnTheBoard(chipId);
         let needToCheck = _.difference(neighbors, previouslyChecked);
-        previouslyChecked = _.union(previouslyFound, neighbors);
+        previouslyChecked = _.union(previouslyChecked, neighbors);
 
         _.each(needToCheck, check => {
-            neighbors = _.union(neighbors, getAllConnectedChipsOnBoard(neighbors, previouslyChecked))
+            neighbors = _.union(neighbors, this.getAllConnectedChipsOnBoard(check, previouslyChecked))
         })
-
         return neighbors;
     }
 
@@ -136,7 +134,7 @@ export default class GameBoard {
      * Find all chips on the board, aka previously placed, adjacent to the chip id.
      */
     getNeighborChipsOnTheBoard(chipId) {
-        return _.filter(this.getNeighborIds(chipId), neighborId => { this.isChipOnBoard(neighborId) });
+        return _.filter(this.getNeighborIds(chipId), neighborId => { return this.isChipOnBoard(neighborId) });
     }
 
     /**
