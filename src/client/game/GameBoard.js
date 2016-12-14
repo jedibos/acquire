@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import PlacementEffect from './PlacementEffect';
+import CompanyStatus from './CompanyStatus';
 import {rows, columns, allChips} from './Grid.js';
 
 export default class GameBoard {
@@ -153,7 +154,7 @@ export default class GameBoard {
     getBottomNeighborId(chipId) {
         let {row, col} = this.getRowAndColumn(chipId);
         let rowIndex = rows.indexOf(row);
-        return rowIndex + 1 < rows.length ? rows[rowIndex + 1] + col : null;
+        return rowIndex + 1 < rows.length ? col + rows[rowIndex + 1] : null;
     }
 
     /**
@@ -162,7 +163,7 @@ export default class GameBoard {
     getTopNeighborId(chipId) {
         let {row, col} = this.getRowAndColumn(chipId);
         let rowIndex = rows.indexOf(row);
-        return rowIndex > 0 ? rows[rowIndex - 1] + col : null;
+        return rowIndex > 0 ? col + rows[rowIndex - 1] : null;
     }
 
     /**
@@ -171,7 +172,7 @@ export default class GameBoard {
     getRightNeighborId(chipId) {
         let {row, col} = this.getRowAndColumn(chipId);
         let colIndex = columns.indexOf(col);
-        return colIndex + 1 < columns.length ? row + columns[colIndex + 1] : null;
+        return colIndex + 1 < columns.length ? columns[colIndex + 1] + row: null;
     }
 
     /**
@@ -180,13 +181,13 @@ export default class GameBoard {
     getLeftNeighborId(chipId) {
         let {row, col} = this.getRowAndColumn(chipId);
         let colIndex = columns.indexOf(col);
-        return colIndex > 0 ? row + columns[colIndex - 1] : null;
+        return colIndex > 0 ? columns[colIndex - 1] + row : null;
     }
 
     /**
      * Breaks up the chipId into the identifies for the row (1-12) and column (A-I).
      */
     getRowAndColumn(id) {
-        return {row: id.slice(0, -1), col: id.slice(-1)}
+        return {col: id.slice(0, -1), row: id.slice(-1)}
     }
 }

@@ -10,8 +10,8 @@ import Player from '../client/game/Player';
 it('check various neighbor cases', () => {
     let board = new GameBoard({companyManager: new CompanyManager()});
 
-    expect(board.getNeighborIds('1A')).toEqual(['1B', '2A']);
-    expect(board.getNeighborIds('12A')).toEqual(['12B', '11A']);
+    expect(board.getNeighborIds('1A')).toEqual(['2A', '1B']);
+    expect(board.getNeighborIds('12A')).toEqual(['11A', '12B']);
 });
 
 /**
