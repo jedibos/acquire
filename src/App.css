@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  
 }
 
 /*
@@ -76,4 +76,8 @@
 }
 .imperial div {
   background-color: #D455C9;
+}
+
+.hidden {
+  display: none;
 }

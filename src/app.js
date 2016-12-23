@@ -1,30 +1,60 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import GameBoard from './client/game/GameBoard';
+import PlacementEffect from './client/game/PlacementEffect';
+
 import GameBoardView from './GameBoardView';
+import CompanyCreationOptions from './CompanyCreationOptions';
 
 class App extends Component {
   constructor() {
     super();
 
+    //state management
     this.state = {
+      addingCompany: false,
+      currentChipId: '',
       gameBoard: new GameBoard()
     }
+    this.gameBoard = this.state.gameBoard;
+
+    //event bindings
     this.placeChipOnBoard = this.placeChipOnBoard.bind(this);
+    this.createCompany = this.createCompany.bind(this);
   }
 
   render() {
     return (
       <div className="App">
-        <GameBoardView gameBoard={this.state.gameBoard} placeChipOnBoard={this.placeChipOnBoard} />
+        <div className="row">
+          <div className="col-md-8">
+            <GameBoardView gameBoard={this.gameBoard} placeChipOnBoard={this.placeChipOnBoard} />
+          </div>
+          <div className="col-md-4">
+            <CompanyCreationOptions addingCompany={this.state.addingCompany}
+              chipId={this.state.currentChipId}
+              gameBoard={this.state.gameBoard}
+              createCompany={this.createCompany} />
+          </div>
+        </div>
       </div>
     );
   }
 
   placeChipOnBoard(chipId, event) {
-    this.state.gameBoard.placeChip(chipId);
-    this.setState({gameBoard: this.state.gameBoard});
+    let placementEffect = this.gameBoard.determineChipPlacementEffect(chipId);
+    if (placementEffect === PlacementEffect.NO_AFFECT) {
+      this.gameBoard.placeChip(chipId);
+      this.setState({gameBoard: this.gameBoard});
+
+    } else {
+      this.setState({addingCompany: true, currentChipId: chipId});
+    }
+  }
+
+  createCompany(data, event) {
+    this.gameBoard.placeChipAndStartCompany(data.player, data.chipId, data.companyName);
+    this.setState({gameBoard: this.gameBoard, addingCompany: false});
   }
 }
 export default App;

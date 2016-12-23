@@ -16,15 +16,15 @@ export default class GameBoard {
      * Determines the type of effect that placement of tile will have on the game board.
      */
     determineChipPlacementEffect(chipId) {
-        let neighbors = this.getNeighborIds(chipId);
-        let neighborCompanies = this.getNeighborCompanies(chipId, neighbors);
+        let neighborChips = this.getNeighborChipsOnTheBoard(chipId);
+        let neighborCompanies = this.getNeighborCompanies(chipId);
 
         switch (true) {
-            case (neighbors.size === 0):
+            case (neighborChips.length === 0):
                 return PlacementEffect.NO_AFFECT;
-            case (neighborCompanies.size === 1):
+            case (neighborCompanies.length === 1):
                 return PlacementEffect.GROW_COMPANY;
-            case (neighbors.size > 0 && neighborCompanies.size === 0):
+            case (neighborChips.length > 0 && neighborCompanies.length === 0):
                 return PlacementEffect.CREATE_COMPANY;
             default:
                 return PlacementEffect.MERGE
@@ -77,7 +77,9 @@ export default class GameBoard {
      * Get the company name for a particular chip.
      */
     getCompanyName(chipId) {
-        return this.companyManager.getCompanyByChipId(chipId);
+        let company = this.companyManager.getCompanyByChipId(chipId);
+        console.log(company);
+        return company ? company.name : '';
     }
 
     /**
