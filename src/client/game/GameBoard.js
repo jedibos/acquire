@@ -1,11 +1,13 @@
 import _ from 'underscore';
 import PlacementEffect from './PlacementEffect';
+import CompanyManager from './CompanyManager';
 import CompanyStatus from './CompanyStatus';
 import {rows, columns, allChips} from './Grid.js';
 
 export default class GameBoard {
     constructor(pState) {
-        this.companyManager = pState.companyManager;
+        pState = pState || {};
+        this.companyManager = pState.companyManager || new CompanyManager();;
         this.chipPile = pState.chipPile || allChips.slice();
         this.chipsOnTheBoard = pState.chipsOnTheBoard || [];
     }
@@ -18,11 +20,11 @@ export default class GameBoard {
         let neighborCompanies = this.getNeighborCompanies(chipId, neighbors);
 
         switch (true) {
-            case (neighbors.size == 0):
+            case (neighbors.size === 0):
                 return PlacementEffect.NO_AFFECT;
-            case (neighborCompanies.size == 1):
+            case (neighborCompanies.size === 1):
                 return PlacementEffect.GROW_COMPANY;
-            case (neighbors.size > 0 && neighborCompanies.size == 0):
+            case (neighbors.size > 0 && neighborCompanies.size === 0):
                 return PlacementEffect.CREATE_COMPANY;
             default:
                 return PlacementEffect.MERGE
@@ -37,7 +39,7 @@ export default class GameBoard {
     placeChip(chipId) {
         //if the chip causes a company to grow, then find the copmany and add to it
         let neighborCompanies = this.getNeighborCompanies(chipId);
-        if (neighborCompanies.length == 1) {
+        if (neighborCompanies.length === 1) {
             neighborCompanies[0].addChip(chipId);
         }
         this.chipsOnTheBoard.push(chipId);
@@ -72,6 +74,13 @@ export default class GameBoard {
     }
 
     /**
+     * Get the company name for a particular chip.
+     */
+    getCompanyName(chipId) {
+        return this.companyManager.getCompanyByChipId(chipId);
+    }
+
+    /**
      * Determines if the chip is dead and should be removed from play. A chip cannot be played if it would
      * connect two permanent companies, which are companies with 11 or more chips.
      */
@@ -100,7 +109,7 @@ export default class GameBoard {
      */
     doAnyOpenersRemains() {
         _.filter(this.chipPile, chip => {
-            return this.determineChipPlacementEffect() == PlacementEffect.CREATE_COMPANY
+            return this.determineChipPlacementEffect() === PlacementEffect.CREATE_COMPANY
         }); 
     }
 

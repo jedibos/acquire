@@ -8,8 +8,7 @@ import Player from '../client/game/Player';
  * Test for all neighbors. Verifies corners, edges, and chips in the middle of the board.
  */
 it('check various neighbor cases', () => {
-    let board = new GameBoard({companyManager: new CompanyManager()});
-
+    let board = new GameBoard();
     expect(board.getNeighborIds('1A')).toEqual(['2A', '1B']);
     expect(board.getNeighborIds('12A')).toEqual(['11A', '12B']);
 });
