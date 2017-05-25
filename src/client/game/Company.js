@@ -39,6 +39,7 @@ export default class Company {
             case 1: this.stockCost = 200; break;
             case 2: this.stockCost = 300; break;
             case 3: this.stockCost = 400; break;
+            default: this.stockCost = 400;
         }
 
         //increase the stock cost based on the company size
@@ -56,15 +57,15 @@ export default class Company {
     getCompanySizeCostFactor() {
         let cs = this.getSize();
         switch(true) {
-            case (cs == 2):             return 0;
-            case (cs == 3):             return 1;
-            case (cs == 4):             return 2;
-            case (cs == 5):             return 3;
+            case (cs === 2):            return 0;
+            case (cs === 3):            return 1;
+            case (cs === 4):            return 2;
+            case (cs === 5):            return 3;
             case (cs > 6  && cs <= 10): return 4;
             case (cs > 10 && cs <= 20): return 5;
             case (cs > 20 && cs <= 30): return 6;
             case (cs > 30 && cs <= 40): return 7;
-            case (cs > 40):             return 8;
+            default:                    return 8;
         }
     }
 
@@ -72,7 +73,7 @@ export default class Company {
      * Determines if the company is open and stocks can be purchased.
      */
     isOpen() {
-        return this.status == CompanyStatus.OPEN;
+        return this.status === CompanyStatus.OPEN;
     }
 
     /**
@@ -99,5 +100,9 @@ export default class Company {
 
     getSize() {
         return this.companyChips.length;
+    }
+
+    debug() {
+        console.log('Company ' + this.name + ': [' +  this.status + ', ' + this.companyChips + ', ' + this.availableStocks + ']')
     }
 }

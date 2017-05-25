@@ -14,6 +14,7 @@ class App extends Component {
     this.state = {
       addingCompany: false,
       currentChipId: '',
+      selectedCompanyToCreate: '',
       gameBoard: new GameBoard()
     }
     this.gameBoard = this.state.gameBoard;
@@ -21,6 +22,7 @@ class App extends Component {
     //event bindings
     this.placeChipOnBoard = this.placeChipOnBoard.bind(this);
     this.createCompany = this.createCompany.bind(this);
+    this.selectCompanyToCreate = this.selectCompanyToCreate.bind(this);
   }
 
   render() {
@@ -34,14 +36,16 @@ class App extends Component {
             <CompanyCreationOptions addingCompany={this.state.addingCompany}
               chipId={this.state.currentChipId}
               gameBoard={this.state.gameBoard}
-              createCompany={this.createCompany} />
+              createCompany={this.createCompany}
+              selectedCompany={this.state.selectedCompanyToCreate}
+              selectCompanyToCreate={this.selectCompanyToCreate} />
           </div>
         </div>
       </div>
     );
   }
 
-  placeChipOnBoard(chipId, event) {
+  placeChipOnBoard(chipId) {
     let placementEffect = this.gameBoard.determineChipPlacementEffect(chipId);
     if (placementEffect === PlacementEffect.NO_AFFECT) {
       this.gameBoard.placeChip(chipId);
@@ -52,7 +56,11 @@ class App extends Component {
     }
   }
 
-  createCompany(data, event) {
+  selectCompanyToCreate(companyName) {
+    this.setState({selectedCompanyToCreate: companyName});
+  }
+
+  createCompany(data) {
     this.gameBoard.placeChipAndStartCompany(data.player, data.chipId, data.companyName);
     this.setState({gameBoard: this.gameBoard, addingCompany: false});
   }

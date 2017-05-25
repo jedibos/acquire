@@ -1,15 +1,3 @@
-.App {
-  
-}
-
-/*
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-*/
-
-
 /**
  * Acquire Styles
  */
@@ -50,31 +38,45 @@
   text-align: center;
 }
 
+
+.company-cards div {
+  width: 100px;
+  height: 70px;
+  text-align: center;
+  color: white;
+  margin: 5px;
+}
+
+.company-cards.selected {
+  border: 2px solid black;
+}
+
+
 /* Small Companies */
-.towers div {
+.Towers div {
   background-color: #DFEB07;
   color: black;
 }
-.luxor div {
+.Luxor div {
   background-color: #F71B1B;
 }
 
 /* Medium Companies */
-.american div {
+.American div {
   background-color: #0d0df2;
 }
-.festival div {
+.Festival div {
   background-color: #4C9134;
 }
-.worldwide div {
+.Worldwide div {
   background-color: #57360C;
 }
 
 /* Large Companies */
-.contential div {
+.Contential div {
   background-color: #68BBF2;
 }
-.imperial div {
+.Imperial div {
   background-color: #D455C9;
 }
 

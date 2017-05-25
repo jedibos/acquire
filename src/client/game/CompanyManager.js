@@ -39,6 +39,10 @@ export default class CompanyManager {
      * Retrieves the company by name.
      */
     getCompanyByName(name) {
-        return _.find(this.companies, company => { return company.name == name });
+        return _.find(this.companies, company => { return company.name === name });
+    }
+
+    debug() {
+        _.each(this.companies, company => { company.debug() })
     }
 }

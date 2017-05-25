@@ -78,7 +78,6 @@ export default class GameBoard {
      */
     getCompanyName(chipId) {
         let company = this.companyManager.getCompanyByChipId(chipId);
-        console.log(company);
         return company ? company.name : '';
     }
 
@@ -200,5 +199,13 @@ export default class GameBoard {
      */
     getRowAndColumn(id) {
         return {col: id.slice(0, -1), row: id.slice(-1)}
+    }
+
+    getCompanyManager() {
+        return this.companyManager;
+    }
+
+    getCompanyByName(companyName) {
+        return this.companyManager.getCompanyByName(companyName);
     }
 }
